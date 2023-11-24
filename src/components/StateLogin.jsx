@@ -1,56 +1,76 @@
-// import { useState } from "react";
+import { useState } from "react";
 
-// export default function Login() {
-//   const [enteredInputs, setEnteredInputs] = useState({
-//     email: "",
-//     password: "",
-//   });
+export default function Login() {
+  const [enteredInputs, setEnteredInputs] = useState({
+    email: "",
+    password: "",
+  });
 
-//   function handleSubmit(event) {
-//     event.preventDefault();
+  const [didEdit, setDidEdit] = useState({
+    email: false,
+    password: false,
+  });
 
-//     console.log(enteredInputs);
-//   }
+  const emailIsInvalid = didEdit.email && !enteredInputs.email.includes("@");
 
-//   function handleInputChange(identifier, value) {
-//     setEnteredInputs((prevValues) => ({
-//       ...prevValues,
-//       [identifier]: value,
-//     }));
-//   }
+  function handleSubmit(event) {
+    event.preventDefault();
 
-//   return (
-//     <form onSubmit={handleSubmit}>
-//       <h2>Login</h2>
+    console.log(enteredInputs);
+  }
 
-//       <div className="control-row">
-//         <div className="control no-margin">
-//           <label htmlFor="email">Email</label>
-//           <input
-//             id="email"
-//             type="email"
-//             name="email"
-//             onChange={(event) => handleInputChange("email", event.target.value)}
-//             value={enteredInputs.email}
-//           />
-//         </div>
+  function handleInputChange(identifier, value) {
+    setEnteredInputs((prevValues) => ({
+      ...prevValues,
+      [identifier]: value,
+    }));
+    setDidEdit((prevEdit) => ({
+      ...prevEdit,
+      [identifier]: false,
+    }));
+  }
 
-//         <div className="control no-margin">
-//           <label htmlFor="password">Password</label>
-//           <input
-//             id="password"
-//             type="password"
-//             name="password"
-//             onChange={(event) => handleInputChange("password", event.target.value)}
-//             value={enteredInputs.password}
-//           />
-//         </div>
-//       </div>
+  function handleInputBlur(identifier) {
+    setDidEdit((prevEdit) => ({
+      ...prevEdit,
+      [identifier]: true,
+    }));
+  }
 
-//       <p className="form-actions">
-//         <button className="button button-flat">Reset</button>
-//         <button className="button">Login</button>
-//       </p>
-//     </form>
-//   );
-// }
+  return (
+    <form onSubmit={handleSubmit}>
+      <h2>Login</h2>
+
+      <div className="control-row">
+        <div className="control no-margin">
+          <label htmlFor="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            onBlur={() => handleInputBlur("email")}
+            onChange={(event) => handleInputChange("email", event.target.value)}
+            value={enteredInputs.email}
+          />
+          <div className="control-error">{emailIsInvalid && <p>Please enter a valid email address</p>}</div>
+        </div>
+
+        <div className="control no-margin">
+          <label htmlFor="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            onChange={(event) => handleInputChange("password", event.target.value)}
+            value={enteredInputs.password}
+          />
+        </div>
+      </div>
+
+      <p className="form-actions">
+        <button className="button button-flat">Reset</button>
+        <button className="button">Login</button>
+      </p>
+    </form>
+  );
+}
